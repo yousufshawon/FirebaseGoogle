@@ -2,7 +2,6 @@ package com.shawon.yousuf.firebasegoogle.dialog;
 //Created by Yousuf on 10/4/2016.
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,6 +39,8 @@ public class DialogAddStudent {
     private String message;
     AlertDialog mDialog;
 
+    private Student currentStudent;
+
     private String TAG = getClass().getSimpleName();
 
 
@@ -61,6 +62,17 @@ public class DialogAddStudent {
         makeDialog();
     }
 
+    public DialogAddStudent(Context context, String title, String message, Student student) {
+        this.context = context;
+        this.title = title;
+        this.message = message;
+        this.currentStudent = student;
+
+        makeDialog();
+    }
+
+
+
     public void setOnSelectListener(OnSelect mListener) {
         mOnSelect = mListener;
     }
@@ -76,8 +88,20 @@ public class DialogAddStudent {
                 .setView(contentView);
 
 
+        if(currentStudent!= null){
+            updateUI();
+        }
+
         mDialog = mBuilder.create();
 
+    }
+
+    private void updateUI(){
+        if (currentStudent != null) {
+            editTextName.setText(currentStudent.getName());
+            editTextRoll.setText( ""+ currentStudent.getRoll());
+            editTextAge.setText( "" +  currentStudent.getAge());
+        }
     }
 
     private void onCancelClick() {
@@ -99,7 +123,16 @@ public class DialogAddStudent {
                 long rollNum = Long.parseLong(roll);
                 int ageInt = Integer.parseInt(age);
 
-                mOnSelect.onOkSelect(new Student(name, rollNum, ageInt));
+                if (currentStudent == null) {
+                    currentStudent = new Student(name, rollNum, ageInt);
+                }else {
+                    currentStudent.setName(name);
+                    currentStudent.setAge(ageInt);
+                    currentStudent.setRoll(rollNum);
+                    currentStudent.setUpdatedAt(System.currentTimeMillis());
+                }
+
+                mOnSelect.onOkSelect(currentStudent);
                 mDialog.dismiss();
             } else {
                 Log.d(TAG, "not valid");

@@ -1,6 +1,11 @@
 package com.shawon.yousuf.firebasegoogle.model;
 //Created by Yousuf on 10/4/2016.
 
+import com.shawon.yousuf.firebasegoogle.util.Constants;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  */
@@ -63,6 +68,18 @@ public class Student {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+
+    public Map<String, Object> toMap(){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put(Constants.TAG_NAME, name);
+        result.put(Constants.TAG_ROLL, roll);
+        result.put(Constants.TAG_AGE, age);
+        result.put(Constants.TAG_UPDATED_AT, updatedAt);
+        result.put(Constants.TAG_CREATED_AT, createdAt);
+
+        return result;
     }
 
     @Override
